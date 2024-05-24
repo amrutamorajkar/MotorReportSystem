@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "ServiceBusConn": "Endpoint=sb://mtmotorssub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=crTDHxHLDysrKDz/IwZ7ilj9aIKpb2Foe+ASbLaCySM=",
+    "BlobStorageConn": "DefaultEndpointsProtocol=https;AccountName=defaultresourcegrouad2a;AccountKey=qne5oGo1evZwqiEvQtzd86yD7O5P0xPjYFs75HN22RoxBgWtaZ7pvVJUKSrtKTXYivAIBnGGnRz/+AStJAi//Q==;EndpointSuffix=core.windows.net",
+    "CosmosDbConn": "AccountEndpoint=https://mtmotorscosmos.documents.azure.com:443/;AccountKey=bhvSoykFi4enMxFevAUjMTpjJpRLTpkpO8BqIkQHHbn4ILZjltIHOHGBhLcIEiuWyi83TU0OAcbdACDbIOykng=="
+  }
+}

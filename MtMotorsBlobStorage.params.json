@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccounts_defaultresourcegrouad2a_name": {
+      "value": null
+    },
+    "blob_container_name": {
+      "value": null
+    },
+    "location": {
+      "value": null
+    }
+  }
+}

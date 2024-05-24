@@ -1,0 +1,223 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "service_BusNamespace_Name": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus namespace"
+      }
+    },
+    "serviceBusTopicName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Topic"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    }
+  },
+    "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.ServiceBus/namespaces",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[parameters('service_BusNamespace_Name')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard"
+      },
+      "properties": {
+        "premiumMessagingPartitions": 0,
+        "minimumTlsVersion": "1.0",
+        "publicNetworkAccess": "Enabled",
+        "disableLocalAuth": false,
+        "privateEndpointConnections": [],
+        "zoneRedundant": false
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/authorizationrules",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/RootManageSharedAccessKey')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/networkrulesets",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/default')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "publicNetworkAccess": "Enabled",
+        "defaultAction": "Allow",
+        "virtualNetworkRules": [],
+        "ipRules": [],
+        "trustedServiceAccessEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/', parameters('serviceBusTopicName'))]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "maxMessageSizeInKilobytes": 256,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "maxSizeInMegabytes": 1024,
+        "requiresDuplicateDetection": false,
+        "duplicateDetectionHistoryTimeWindow": "PT10M",
+        "enableBatchedOperations": false,
+        "status": "Active",
+        "supportOrdering": false,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "enablePartitioning": false,
+        "enableExpress": false
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/', parameters('serviceBusTopicName'), '/', parameters('service_BusNamespace_Name'), '2')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P14D",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": false,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P14D"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/', parameters('serviceBusTopicName'), '/', parameters('service_BusNamespace_Name'), 't')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P14D",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": false,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P14D"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/', parameters('serviceBusTopicName'), '/', parameters('service_BusNamespace_Name'), '3')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P14D",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": false,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P14D"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/',parameters('serviceBusTopicName'), '/', parameters('service_BusNamespace_Name'), '2/$Default')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'), concat(parameters('service_BusNamespace_Name'), '2'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "action": {},
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "1=1",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/',parameters('serviceBusTopicName'), '/', parameters('service_BusNamespace_Name'), '3/$Default')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'), concat(parameters('service_BusNamespace_Name'), '3'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "action": {},
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "1=1",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(parameters('service_BusNamespace_Name'), '/',parameters('serviceBusTopicName'),'/', parameters('service_BusNamespace_Name'), 't/$Default')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'), concat(parameters('service_BusNamespace_Name'), 't'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('service_BusNamespace_Name'), parameters('serviceBusTopicName'))]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('service_BusNamespace_Name'))]"
+      ],
+      "properties": {
+        "action": {},
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "1=1",
+          "compatibilityLevel": 20
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "FunctionApp_Name": {
+      "defaultValue": "MtMotorsFunctions",
+      "type": "String"
+    },
+    "serverfarms_ASP_DefaultResourceGroupEUS_940b_externalid": {
+      "defaultValue": "/subscriptions/38c5da27-6fa1-495f-b28a-d7555c84f160/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Web/serverfarms/ASP-DefaultResourceGroupEUS-940b",
+      "type": "String"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    }
+  },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-02-01",
+            "name": "[parameters('FunctionApp_Name')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/38c5da27-6fa1-495f-b28a-d7555c84f160/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Insights/components/MtMotorsFunctions"
+            },
+            "kind": "functionapp",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "mtmotorsfunctions.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "mtmotorsfunctions.scm.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_ASP_DefaultResourceGroupEUS_940b_externalid')]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 200,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "815E61EB7F0FC5BAFE78A205496B5F243D569F2F76010E49B19380FDA9B17A0B",
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "publicNetworkAccess": "Enabled",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2019-08-01",
+            "name": "[concat(parameters('FunctionApp_Name'), '/ftp')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('FunctionApp_Name'))]"
+            ],
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/38c5da27-6fa1-495f-b28a-d7555c84f160/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Insights/components/MtMotorsFunctions"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+      {
+        "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+        "apiVersion": "2019-08-01",
+        "name": "[concat(parameters('FunctionApp_Name'), '/scm')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/sites', parameters('FunctionApp_Name'))]"
+        ],
+        "tags": {
+          "hidden-link: /app-insights-resource-id": "/subscriptions/38c5da27-6fa1-495f-b28a-d7555c84f160/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Insights/components/MtMotorsFunctions"
+        },
+        "properties": {
+          "allow": false
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2019-08-01",
+        "name": "[concat(parameters('FunctionApp_Name'), '/web')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/sites', parameters('FunctionApp_Name'))]"
+        ],
+        "tags": {
+          "hidden-link: /app-insights-resource-id": "/subscriptions/38c5da27-6fa1-495f-b28a-d7555c84f160/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Insights/components/MtMotorsFunctions"
+        },
+        "properties": {
+          "numberOfWorkers": 1,
+          "defaultDocuments": [
+            "Default.htm",
+            "Default.html",
+            "Default.asp",
+            "index.htm",
+            "index.html",
+            "iisstart.htm",
+            "default.aspx",
+            "index.php"
+          ],
+          "netFrameworkVersion": "v8.0",
+          "requestTracingEnabled": false,
+          "remoteDebuggingEnabled": false,
+          "httpLoggingEnabled": false,
+          "acrUseManagedIdentityCreds": false,
+          "logsDirectorySizeLimit": 35,
+          "detailedErrorLoggingEnabled": false,
+          "publishingUsername": "$MtMotorsFunctions",
+          "scmType": "None",
+          "use32BitWorkerProcess": false,
+          "webSocketsEnabled": false,
+          "alwaysOn": false,
+          "managedPipelineMode": "Integrated",
+          "virtualApplications": [
+            {
+              "virtualPath": "/",
+              "physicalPath": "site\\wwwroot",
+              "preloadEnabled": false
+            }
+          ],
+          "loadBalancing": "LeastRequests",
+          "experiments": {
+            "rampUpRules": []
+          },
+          "autoHealEnabled": false,
+          "vnetRouteAllEnabled": false,
+          "vnetPrivatePortsCount": 0,
+          "publicNetworkAccess": "Enabled",
+          "cors": {
+            "allowedOrigins": [
+              "https://portal.azure.com"
+            ],
+            "supportCredentials": false
+          },
+          "localMySqlEnabled": false,
+          "ipSecurityRestrictions": [
+            {
+              "ipAddress": "Any",
+              "action": "Allow",
+              "priority": 2147483647,
+              "name": "Allow all",
+              "description": "Allow all access"
+            }
+          ],
+          "scmIpSecurityRestrictions": [
+            {
+              "ipAddress": "Any",
+              "action": "Allow",
+              "priority": 2147483647,
+              "name": "Allow all",
+              "description": "Allow all access"
+            }
+          ],
+          "scmIpSecurityRestrictionsUseMain": false,
+          "http20Enabled": false,
+          "minTlsVersion": "1.2",
+          "scmMinTlsVersion": "1.2",
+          "ftpsState": "FtpsOnly",
+          "preWarmedInstanceCount": 0,
+          "functionAppScaleLimit": 200,
+          "functionsRuntimeScaleMonitoringEnabled": false,
+          "minimumElasticInstanceCount": 0,
+          "azureStorageAccounts": {}
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites/hostNameBindings",
+        "apiVersion": "2019-08-01",
+        "name": "[concat(parameters('FunctionApp_Name'), '/', parameters('FunctionApp_Name'), '.azurewebsites.net')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/sites', parameters('FunctionApp_Name'))]"
+        ],
+        "properties": {
+          "siteName": "MtMotorsFunctions",
+          "hostNameType": "Verified"
+        }
+      }
+    ]
+}
